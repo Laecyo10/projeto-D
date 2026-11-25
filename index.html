@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Projetos - Laecyo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================
+               KEYFRAMES (ANIMAÇÕES)
+        ========================== */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes headerEnter {
+            from { opacity: 0; transform: translateY(-40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 5px 18px rgba(0, 119, 255, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 10px 32px rgba(0, 119, 255, 0.75); transform: scale(1.02); }
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes modalZoomIn {
+            from { opacity: 0; transform: scale(0.92) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes rippleAnim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        @keyframes shineSweep {
+            0% { left: -100%; }
+            35%, 100% { left: 160%; }
+        }
+
+        @keyframes badgeBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* ==========================
+               ESTILO GERAL
+        ========================== */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", Arial, sans-serif;
+            background: linear-gradient(-45deg, #d7e6f5, #eef5fc, #ffffff, #dbeafe);
+            background-size: 400% 400%;
+            animation: gradientFlow 12s ease infinite;
+            color: #1e293b;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Barra de Progresso de Leitura */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            width: 0%;
+            background: linear-gradient(90deg, #00d2ff, #0077ff, #7c3aed);
+            z-index: 9998;
+            box-shadow: 0 0 12px rgba(0, 119, 255, 0.8);
+            transition: width 0.1s ease-out;
+        }
+
+        /* Canvas de Partículas Interativas */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1, h2 {
+            font-weight: 600;
+            line-height: 1.55;
+        }
+
+        img {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 18px;
+            display: block;
+            margin: 25px auto;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+        }
+
+        img:hover {
+            transform: scale(1.06) rotate(1deg);
+            box-shadow: 0 20px 42px rgba(0, 119, 255, 0.35);
+        }
+
+        /* ==========================
+                CABEÇALHO
+        ========================== */
+        header {
+            background: linear-gradient(135deg, #0077ff, #004bb5, #2563eb);
+            background-size: 200% 200%;
+            animation: gradientFlow 7s ease infinite, headerEnter 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            padding: 48px 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 86, 201, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-25deg);
+            animation: shineSweep 5s infinite;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: clamp(26px, 4.2vw, 40px);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 3px 12px rgba(0,0,0,0.25);
+        }
+
+        .typing-subtitle {
+            margin-top: 12px;
+            font-size: clamp(16px, 2.5vw, 21px);
+            font-weight: 400;
+            color: #e0f2fe;
+            min-height: 32px;
+        }
+
+        .typing-word {
+            font-weight: 700;
+            color: #fde047;
+            border-right: 3px solid #fde047;
+            padding-right: 4px;
+            animation: blinkCursor 0.75s infinite;
+        }
+
+        /* ==========================
+                CONTEÚDO & REVEAL
+        ========================== */
+        section {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.96);
+            transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Badges de habilidades flutuantes */
+        .skills-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 28px 0;
+        }
+
+        .skill-badge {
+            background: white;
+            color: #0056c9;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 2px solid rgba(0, 119, 255, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 119, 255, 0.12);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: badgeBounce 3s ease-in-out infinite;
+        }
+
+        .skill-badge:nth-child(2) { animation-delay: 0.3s; }
+        .skill-badge:nth-child(3) { animation-delay: 0.6s; }
+        .skill-badge:nth-child(4) { animation-delay: 0.9s; }
+        .skill-badge:nth-child(5) { animation-delay: 1.2s; }
+
+        .skill-badge:hover {
+            background: #0077ff;
+            color: white;
+            transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 10px 20px rgba(0, 119, 255, 0.35);
+        }
+
+        /* ==========================
+                BOTÕES SUPER ANIMADOS
+        ========================== */
+        nav {
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        nav a {
+            position: relative;
+            display: inline-block;
+            padding: 15px 32px;
+            background: linear-gradient(135deg, #0077ff, #0056c9);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            animation: pulseGlow 2.8s infinite;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+        }
+
+        nav a::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+            transition: left 0.55s ease;
+        }
+
+        nav a:hover {
+            animation: none;
+            transform: translateY(-5px) scale(1.06);
+            background: linear-gradient(135deg, #0088ff, #0044aa);
+            box-shadow: 0 14px 30px rgba(0, 119, 255, 0.5);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        nav a:active {
+            transform: translateY(0) scale(0.96);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: rippleAnim 0.6s linear;
+            pointer-events: none;
+        }
+
+        /* ==========================
+                CARDS COM EFEITO 3D E BRILHO
+        ========================== */
+        .card {
+            position: relative;
+            max-width: 900px;
+            margin: 45px auto;
+            padding: 36px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border-radius: 26px;
+            border: 2px solid rgba(0, 119, 255, 0.15);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease-out, box-shadow 0.4s ease, border-color 0.4s ease;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00d2ff, #0077ff, #7c3aed, #00d2ff);
+            background-size: 200% 100%;
+            animation: gradientFlow 4s linear infinite;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 119, 255, 0.55);
+            box-shadow: 0 24px 50px rgba(0, 119, 255, 0.25);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .title {
+            text-align: center;
+            font-size: clamp(24px, 3.6vw, 34px);
+            font-weight: 800;
+            background: linear-gradient(135deg, #0077ff, #004bb5, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        /* ==========================
+           VISUALIZADOR EM TELA CHEIA
+        ========================== */
+        #project-viewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            animation: modalZoomIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        #viewer-bar {
+            background: #0f172a;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #0077ff;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+        }
+
+        #btn-voltar {
+            background: linear-gradient(135deg, #0077ff, #0056c9);
+            color: white;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+        }
+
+        #btn-voltar:hover {
+            transform: translateX(-4px) scale(1.05);
+            box-shadow: 0 5px 18px rgba(0, 119, 255, 0.6);
+        }
+
+        #project-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            flex: 1;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de progresso de rolagem -->
+    <div id="scroll-progress"></div>
+
+    <!-- Canvas interativo de partículas no fundo -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Cabeçalho -->
+    <header>
+        <h1>Um pouco sobre mim e meus projetos 🚀</h1>
+        <div class="typing-subtitle">
+            Apaixonado por futebol e por criar <span class="typing-word" id="typing-text"></span>
+        </div>
+    </header>
+
+    <!-- Sobre você -->
+    <section>
+        <h2 class="reveal">Olá! Meu nome é Laecyo, tenho 16 anos.</h2>
+
+        <h2 class="reveal">A programação veio de surpresa para mim, porque eu não imaginava que iria gostar tanto — a ponto de pensar em me tornar um programador no futuro.</h2>
+
+        <img class="reveal" src="https://thumbs.dreamstime.com/b/programando-ou-codificando-o-%C3%ADcone-s%C3%ADmbolo-de-programa%C3%A7%C3%A3o-do-editor-84203165.jpg" alt="programação">
+
+        <!-- Tags animadas -->
+        <div class="skills-bar reveal">
+            <span class="skill-badge">💻 HTML5</span>
+            <span class="skill-badge">🎨 CSS3</span>
+            <span class="skill-badge">⚡ JavaScript</span>
+            <span class="skill-badge">🛒 E-commerce</span>
+            <span class="skill-badge">📱 Sistemas Web</span>
+        </div>
+
+        <h2 class="reveal">Sou uma pessoa curiosa, interessada em tecnologia e sempre querendo aprender mais sobre programação. Gosto de entender como tudo funciona por trás das telas — desde sites e aplicativos até jogos e sistemas.</h2>
+
+        <h2 class="reveal">Programar é dar instruções ao computador para que ele faça algo: mostrar imagens, fazer cálculos, rodar jogos, controlar robôs etc. É como falar uma língua especial que o computador entende.</h2>
+
+        <!-- Card curso -->
+        <div class="card reveal tilt-card">
+            <img src="https://pt.quizur.com/_image?href=https://img.quizur.com/f/img618979eea7c2e0.97530308.jpeg?lastEdited=1636399613&w=600&h=600&f=webp" alt="curso técnico">
+
+            <h2>O curso técnico tem me ajudado muito. A área de tecnologia cresce constantemente e faltam profissionais qualificados.  
+            Aprender a criar sites, sistemas, aplicativos, bancos de dados e automações tem sido algo incrível — nunca imaginei que conseguiria fazer isso.</h2>
+
+           
+        </div>
+    </section>
+
+    <!-- Card 1: Cardápio Digital D'MIX BURGUER -->
+    <div style="padding: 0 20px;">
+        <div class="card reveal tilt-card">
+            <h1 class="title">D'MIX BURGUER — Cardápio Digital</h1>
+
+            <img src="cardapio D`mix.png" alt="Cardápio Digital D'MIX BURGUER">
+
+            <h2>
+                Cardápio digital completo e interativo desenvolvido para a lanchonete D'MIX BURGUER. Conta com busca em tempo real, filtro por categorias (hambúrgueres tradicionais, artesanais, pastéis, crepiocas e bebidas), carrinho de compras dinâmico e envio automático do pedido formatado direto para o WhatsApp.
+            </h2>
+            
+            <nav>
+                <a href="#dmix" class="ripple-btn" onclick="abrirSite('dmix'); return false;">🍔 Acessar Cardápio Digital</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Card 2: Loja Chuteiras.PRO -->
+    <div style="padding: 0 20px;">
+        <div class="card reveal tilt-card">
+            <h1 class="title">CHUTEIRAS.PRO — Loja Virtual</h1>
+
+            <img src="https://imgcentauro-a.akamaihd.net/1200x1200/98995429A2.jpg" alt="Loja Virtual Chuteiras Pro">
+
+            <h2>
+                E-commerce completo de chuteiras com seleção de numeração, controle de estoque automático, barra de pesquisa instantânea, carrinho de compras e finalização de pedido integrada ao WhatsApp. Também possui um painel administrativo protegido por senha para cadastrar, editar preços/estoques e excluir produtos.
+            </h2>
+
+            <nav>
+                <a href="#chuteiras" class="ripple-btn" onclick="abrirSite('chuteiras'); return false;">⚽ Acessar Loja de Chuteiras</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Tela onde os sites abrem diretamente -->
+    <div id="project-viewer">
+        <div id="viewer-bar">
+            <button id="btn-voltar" onclick="fecharSite()">← Voltar para Meus Projetos</button>
+            <span id="viewer-title" style="font-weight: 600; font-size: 14px;">Visualizando Projeto</span>
+        </div>
+        <iframe id="project-frame"></iframe>
+    </div>
+
+    <!-- Código completo dos dois sites armazenados de forma segura -->
+    <template id="site-dmix"><!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D'MIX BURGUER — Cardápio Digital & Pedidos Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stoneBg: '#C7C2BA',
+                        stoneLight: '#D5D0C8',
+                        stoneDark: '#B5AFA6',
+                        inkBlack: '#141414',
+                        mustard: '#B58E38',
+                        mustardDark: '#967327',
+                    },
+                    fontFamily: {
+                        display: ['Anton', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #C7C2BA;
+            color: #141414;
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(rgba(181, 142, 56, 0.14) 1px, transparent 1px),
+                              radial-gradient(rgba(20, 20, 20, 0.05) 1px, #C7C2BA 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+        }
+        .menu-dots { flex: 1; border-bottom: 2px dotted rgba(20, 20, 20, 0.45); margin: 0 8px 5px 8px; }
+        .menu-dots-mustard { flex: 1; border-bottom: 2px dotted rgba(181, 142, 56, 0.75); margin: 0 8px 5px 8px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide-up { animation: slideUp 0.25s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased selection:bg-mustard selection:text-white pb-28">
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <header class="relative overflow-hidden border-b-4 border-inkBlack bg-stoneLight/90 pt-6 pb-8 px-4 shadow-sm">
+        <svg class="hidden md:block absolute left-6 top-6 w-20 h-20 text-mustard/40 pointer-events-none" viewBox="0 0 64 64" fill="currentColor">
+            <path d="M28 54V22a4 4 0 0 1 8 0v12h4V26a3 3 0 0 1 6 0v10a6 6 0 0 1-6 6h-4v12h8v4H18v-4h10zm-8-14h-4a6 6 0 0 1-6-6V24a3 3 0 0 1 6 0v10h4v6z"/>
+        </svg>
+        <svg class="hidden md:block absolute right-8 bottom-4 w-24 h-24 text-inkBlack/15 pointer-events-none" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M16 28h32l-4 28H20L16 28z"/>
+            <path d="M20 28l-2-14h6l2 14M28 28l-1-18h6l1 18M36 28l2-15h6l-2 15"/>
+        </svg>
+
+        <div class="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
+            <div class="w-44 sm:w-52 mb-2">
+                <svg viewBox="0 0 260 150" class="w-full h-auto drop-shadow-sm" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="#B58E38">
+                        <rect x="44" y="42" width="7" height="92" rx="2"/>
+                        <path d="M22 50h38l8 8-8 8H22l-7-8 7-8z"/>
+                        <path d="M28 74h34l6 7-6 7H28l-6-7 6-7z"/>
+                    </g>
+                    <g fill="#B58E38">
+                        <path d="M202 134V74a7 7 0 0 1 14 0v22h6V84a5 5 0 0 1 10 0v15a9 9 0 0 1-9 9h-7v26h-14z"/>
+                        <path d="M202 104h-7a9 9 0 0 1-9-9V82a5 5 0 0 1 10 0v12h6v10z"/>
+                    </g>
+                    <line x1="25" y1="134" x2="235" y2="134" stroke="#141414" stroke-width="4" stroke-linecap="round"/>
+                    <g fill="#141414">
+                        <path d="M72 52 C72 22, 188 22, 188 52 L173 52 C170 46, 162 47, 160 52 L72 52 Z"/>
+                        <ellipse cx="122" cy="29" rx="2" ry="4" fill="#D5D0C8" transform="rotate(-20 122 29)"/>
+                        <ellipse cx="130" cy="27" rx="2" ry="4" fill="#D5D0C8"/>
+                        <ellipse cx="138" cy="29" rx="2" ry="4" fill="#D5D0C8" transform="rotate(20 138 29)"/>
+                        <path d="M69 58 H163 C161 65, 165 72, 172 72 L152 80 C145 80, 140 67, 130 67 H69 V58 Z"/>
+                        <path d="M72 74 H134 C143 74, 149 88, 162 88 H181 C184 91, 184 96, 180 99 H72 C64 99, 64 74, 72 74 Z"/>
+                        <path d="M73 105 H187 C187 125, 165 132, 130 132 C95 132, 73 125, 73 105 Z"/>
+                    </g>
+                </svg>
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-6xl tracking-wider text-inkBlack uppercase leading-none">
+                D'MIX BURGUER
+            </h1>
+
+            <div class="relative inline-flex items-center justify-center bg-inkBlack text-mustard font-display text-2xl sm:text-4xl tracking-widest px-8 sm:px-12 py-2.5 mt-3 rounded-r-xl shadow-md"
+                 style="clip-path: polygon(18px 0%, 100% 0%, 100% 100%, 18px 100%, 0% 50%);">
+                <span class="mr-3 text-lg sm:text-2xl">★</span>
+                <span>CARDÁPIO DIGITAL</span>
+                <span class="ml-3 text-lg sm:text-2xl">★</span>
+            </div>
+
+            <div class="mt-3 flex flex-wrap items-center justify-center gap-3 text-sm sm:text-base font-bold text-inkBlack">
+                <a href="https://wa.me/5589988099053" target="_blank" class="inline-flex items-center gap-1.5 bg-stoneDark/60 hover:bg-mustard hover:text-white transition px-3.5 py-1.5 rounded-full border border-inkBlack/20">
+                    <span>📞</span>
+                    <span>(89) 98809-9053</span>
+                </a>
+                <span class="inline-flex items-center gap-1.5 bg-emerald-800 text-white px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+                    Pedidos via WhatsApp
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 z-30 bg-inkBlack text-stoneLight shadow-lg border-b-2 border-mustard">
+        <div class="max-w-5xl mx-auto px-3 py-2.5">
+            <div class="relative mb-2">
+                <input type="text" id="search-input" placeholder="Buscar lanche, pastel, ingrediente ou bebida..."
+                       class="w-full bg-stoneLight/10 text-white placeholder-stoneLight/60 text-sm rounded-lg pl-9 pr-8 py-2 border border-stoneLight/20 focus:outline-none focus:border-mustard transition">
+                <span class="absolute left-3 top-2.5 text-mustard text-sm">🔍</span>
+                <button id="clear-search" onclick="clearSearch()" class="hidden absolute right-2.5 top-2 text-stoneLight/70 hover:text-white text-sm font-bold px-1">✕</button>
+            </div>
+
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5 text-xs sm:text-sm font-bold uppercase tracking-wide">
+                <a href="#tradicionais" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-mustard text-inkBlack hover:brightness-110 transition">🍔 Tradicionais</a>
+                <a href="#artesanais" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">🔥 Artesanais</a>
+                <a href="#adicionais" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">➕ Adicionais</a>
+                <a href="#pasteis" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">🥟 Pastéis</a>
+                <a href="#crepiocas" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">🌮 Crepiócas</a>
+                <a href="#bebidas" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">🥤 Bebidas</a>
+                <a href="#info-loja" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/10 hover:bg-mustard hover:text-inkBlack transition">💳 Pix & Wi-Fi</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 pt-6 space-y-10" id="menu-container">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-7 space-y-8">
+                <section id="tradicionais" class="menu-section scroll-mt-28 bg-stoneLight/75 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-inkBlack/15 shadow-sm">
+                    <div class="mb-4">
+                        <h2 class="font-display text-3xl sm:text-4xl text-inkBlack tracking-wide uppercase leading-none">HAMBÚRGUERES</h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="font-bold text-sm sm:text-base tracking-wider uppercase text-inkBlack">TRADICIONAIS:</span>
+                            <div class="h-1 flex-1 bg-mustard rounded-full"></div>
+                        </div>
+                    </div>
+                    <div id="list-tradicionais" class="space-y-3.5"></div>
+                </section>
+
+                <section id="artesanais" class="menu-section scroll-mt-28 bg-stoneLight/75 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-inkBlack/15 shadow-sm">
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between">
+                            <h2 class="font-display text-2xl sm:text-3xl text-inkBlack tracking-wide uppercase">ARTESANAIS:</h2>
+                            <span class="text-xs font-bold uppercase bg-inkBlack text-mustard px-2.5 py-1 rounded-md">Linha Especial</span>
+                        </div>
+                        <div class="h-1 w-full bg-mustard rounded-full mt-1.5"></div>
+                    </div>
+                    <div id="list-artesanais" class="space-y-3.5"></div>
+                </section>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                <div class="hidden lg:flex flex-col items-center justify-center bg-stoneLight/50 rounded-2xl p-4 border border-inkBlack/10">
+                    <svg viewBox="0 0 220 230" class="w-48 h-auto" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="108" y="12" width="4" height="36" fill="#B58E38"/>
+                        <path d="M84 16h26v14H84l-6-7 6-7z" fill="#B58E38"/>
+                        <text x="97" y="26" font-family="Anton, sans-serif" font-size="9" fill="#141414" text-anchor="middle">BEST</text>
+                        <path d="M110 24h26l6 7-6 7h-26V24z" fill="#B58E38"/>
+                        <text x="123" y="34" font-family="Anton, sans-serif" font-size="9" fill="#141414" text-anchor="middle">FOOD</text>
+                        <path d="M55 72 C55 42, 165 42, 165 72 Z" fill="none" stroke="#141414" stroke-width="3.5"/>
+                        <path d="M48 80 Q65 73 82 81 T116 80 T150 81 T172 79" fill="none" stroke="#141414" stroke-width="3" stroke-linecap="round"/>
+                        <ellipse cx="90" cy="96" rx="18" ry="7" fill="none" stroke="#141414" stroke-width="2.5"/>
+                        <ellipse cx="130" cy="98" rx="18" ry="7" fill="none" stroke="#141414" stroke-width="2.5"/>
+                        <ellipse cx="110" cy="116" rx="46" ry="9" fill="none" stroke="#141414" stroke-width="3"/>
+                        <rect x="62" y="132" width="96" height="18" rx="9" fill="none" stroke="#141414" stroke-width="3.5"/>
+                        <polygon points="52,155 168,155 154,175 110,166 66,175" fill="#B58E38" stroke="#141414" stroke-width="3" stroke-linejoin="round"/>
+                        <path d="M62 182 H158 C158 202, 62 202, 62 182 Z" fill="none" stroke="#141414" stroke-width="3.5"/>
+                    </svg>
+                </div>
+
+                <section id="adicionais" class="menu-section scroll-mt-28 bg-stoneLight/85 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-mustard/60 shadow-sm">
+                    <div class="mb-4">
+                        <h2 class="font-display text-2xl sm:text-3xl text-mustardDark tracking-wide uppercase">ADICIONAIS</h2>
+                        <div class="h-1 w-full bg-inkBlack rounded-full mt-1"></div>
+                        <p class="text-xs text-inkBlack/70 mt-1.5 font-medium">Turbine seu lanche adicionando extras ao pedido:</p>
+                    </div>
+                    <div id="list-adicionais" class="space-y-2.5"></div>
+                </section>
+            </div>
+        </div>
+
+        <div class="border-t-4 border-inkBlack/80 my-2"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-7 space-y-8">
+                <section id="pasteis" class="menu-section scroll-mt-28 bg-stoneLight/75 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-inkBlack/15 shadow-sm">
+                    <div class="mb-4">
+                        <h2 class="font-display text-3xl sm:text-4xl text-inkBlack tracking-wide uppercase">PASTÉIS</h2>
+                        <div class="h-1 w-full bg-mustard rounded-full mt-1"></div>
+                    </div>
+                    <div id="list-pasteis" class="space-y-3.5"></div>
+                </section>
+
+                <section id="crepiocas" class="menu-section scroll-mt-28 bg-stoneLight/75 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-inkBlack/15 shadow-sm">
+                    <div class="mb-4">
+                        <h2 class="font-display text-3xl sm:text-4xl text-inkBlack tracking-wide uppercase">CREPIÓCAS</h2>
+                        <div class="h-1 w-full bg-mustard rounded-full mt-1"></div>
+                    </div>
+                    <div id="list-crepiocas" class="space-y-3.5"></div>
+                </section>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                <section id="bebidas" class="menu-section scroll-mt-28 bg-stoneLight/75 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border-2 border-inkBlack/15 shadow-sm">
+                    <div class="mb-4">
+                        <h2 class="font-display text-3xl sm:text-4xl text-inkBlack tracking-wide uppercase">BEBIDAS</h2>
+                        <div class="h-1 w-full bg-mustard rounded-full mt-1"></div>
+                    </div>
+                    <div id="list-bebidas" class="space-y-3"></div>
+                </section>
+
+                <div class="hidden lg:flex flex-col items-center justify-center bg-stoneLight/50 rounded-2xl p-6 border border-inkBlack/10">
+                    <svg viewBox="0 0 220 150" class="w-48 h-auto text-inkBlack" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+                        <polygon points="20,75 135,25 195,55 195,115 25,135"/>
+                        <polyline points="20,75 195,55"/>
+                        <circle cx="70" cy="98" r="10"/>
+                        <circle cx="155" cy="82" r="13"/>
+                        <circle cx="115" cy="95" r="5"/>
+                        <circle cx="42" cy="115" r="5"/>
+                        <circle cx="132" cy="108" r="4"/>
+                    </svg>
+                    <div class="w-full flex justify-start mt-2 pl-2">
+                        <svg viewBox="0 0 64 64" class="w-12 h-12 text-mustard" fill="currentColor">
+                            <path d="M28 54V18a4 4 0 0 1 8 0v14h4V24a3 3 0 0 1 6 0v11a6 6 0 0 1-6 6h-4v13h12v4H14v-4h14zm-8-14h-4a6 6 0 0 1-6-6V22a3 3 0 0 1 6 0v12h4v6z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="empty-search-state" class="hidden text-center py-12 bg-stoneLight/80 rounded-2xl border-2 border-dashed border-inkBlack/30">
+            <p class="font-display text-2xl text-inkBlack">NENHUM ITEM ENCONTRADO</p>
+            <p class="text-sm text-inkBlack/70 mt-1">Tente buscar por outro nome ou ingrediente.</p>
+            <button onclick="clearSearch()" class="mt-4 bg-inkBlack text-mustard font-bold px-5 py-2 rounded-xl text-sm hover:opacity-90 transition">
+                Mostrar todo o cardápio
+            </button>
+        </div>
+    </main>
+
+    <footer id="info-loja" class="scroll-mt-24 max-w-5xl mx-auto px-4 mt-12">
+        <div class="border-t-4 border-inkBlack pt-8">
+            <div class="text-center mb-6">
+                <span class="font-display text-2xl sm:text-3xl tracking-wider text-inkBlack uppercase">D'MIX BURGUER • INFORMAÇÕES ÚTEIS</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+                <div class="border-2 border-mustard bg-stoneLight/70 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                    <span class="font-display text-sm tracking-wider text-inkBlack/80 uppercase">SENHA DO WIFI:</span>
+                    <p class="font-display text-3xl text-inkBlack mt-1 select-all">Hamburguer</p>
+                    <button onclick="copyText('Hamburguer', 'Senha do Wi-Fi copiada!')"
+                            class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold bg-inkBlack text-stoneLight hover:bg-mustard hover:text-inkBlack px-3.5 py-1.5 rounded-lg transition">
+                        <span>📋</span> Copiar Senha
+                    </button>
+                </div>
+
+                <div class="border-2 border-mustard bg-stoneLight/90 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-md md:-my-1">
+                    <span class="font-display text-sm tracking-wider text-inkBlack/80 uppercase">CHAVE PIX:</span>
+                    <p class="font-display text-2xl sm:text-3xl text-inkBlack mt-1 tracking-wide select-all">(89) 98805-9770</p>
+                    <p class="font-display text-xs sm:text-sm text-inkBlack/90 mt-1 uppercase leading-tight">
+                        DORACI LEAL LUIS<br>BANCO STONE
+                    </p>
+                    <button onclick="copyText('89988059770', 'Chave Pix (89) 98805-9770 copiada!')"
+                            class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold bg-mustard text-inkBlack hover:bg-inkBlack hover:text-mustard px-4 py-1.5 rounded-lg transition shadow-sm">
+                        <span>💠</span> Copiar Chave Pix
+                    </button>
+                </div>
+
+                <div class="border-2 border-mustard bg-stoneLight/70 rounded-xl p-5 flex flex-col items-center justify-center text-center shadow-sm">
+                    <span class="font-display text-sm tracking-wider text-inkBlack/80 uppercase">CONTATO D'MIX:</span>
+                    <p class="font-display text-2xl sm:text-3xl text-inkBlack mt-1 tracking-wide">(89) 98809-9053</p>
+                    <a href="https://wa.me/5589988099053" target="_blank"
+                       class="mt-3 inline-flex items-center gap-1.5 text-xs font-bold bg-emerald-700 text-white hover:bg-emerald-800 px-3.5 py-1.5 rounded-lg transition">
+                        <span>💬</span> Chamar no WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-inkBlack/60 mt-8 font-medium">
+                © 2026 D'MIX BURGUER — Todos os direitos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <div id="floating-cart-bar" class="fixed bottom-4 inset-x-4 z-40 max-w-2xl mx-auto transition-all duration-300 translate-y-28 opacity-0 pointer-events-none">
+        <button onclick="openCartModal()"
+                class="w-full bg-inkBlack text-white border-2 border-mustard rounded-2xl px-5 py-3.5 shadow-2xl flex items-center justify-between hover:bg-neutral-900 active:scale-[0.99] transition">
+            <div class="flex items-center gap-3">
+                <span id="floating-cart-count" class="bg-mustard text-inkBlack font-display text-lg w-8 h-8 rounded-xl flex items-center justify-center">0</span>
+                <div class="text-left">
+                    <p class="font-bold text-sm sm:text-base leading-tight">Ver Meu Pedido</p>
+                    <p class="text-xs text-stoneLight/80">Clique para finalizar no WhatsApp</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <span id="floating-cart-total" class="font-display text-xl sm:text-2xl text-mustard tracking-wide">R$ 0,00</span>
+            </div>
+        </button>
+    </div>
+
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+        <div onclick="closeCartModal()" class="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity"></div>
+
+        <div class="fixed inset-x-0 bottom-0 sm:inset-0 sm:flex sm:items-center sm:justify-center p-0 sm:p-4 pointer-events-none">
+            <div class="bg-stoneLight w-full sm:max-w-lg max-h-[92vh] rounded-t-3xl sm:rounded-2xl border-t-4 sm:border-4 border-inkBlack shadow-2xl flex flex-col pointer-events-auto animate-slide-up overflow-hidden">
+                <div class="bg-inkBlack text-white px-5 py-4 flex items-center justify-between border-b-2 border-mustard">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">🛒</span>
+                        <h3 class="font-display text-2xl tracking-wider text-mustard uppercase">SEU PEDIDO</h3>
+                    </div>
+                    <button onclick="closeCartModal()" class="text-stoneLight hover:text-white bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center font-bold">✕</button>
+                </div>
+
+                <div class="p-5 overflow-y-auto space-y-5 flex-1">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-inkBlack/70">Itens Selecionados</span>
+                            <button onclick="clearCart()" class="text-xs font-semibold text-red-700 hover:underline">Limpar carrinho</button>
+                        </div>
+                        <div id="cart-items-list" class="space-y-2.5"></div>
+                    </div>
+
+                    <div class="border-t-2 border-inkBlack/15 pt-4 space-y-3">
+                        <p class="font-display text-lg text-inkBlack uppercase tracking-wide">Dados para Entrega / Retirada</p>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Seu Nome *</label>
+                            <input type="text" id="customer-name" placeholder="Ex: João Silva"
+                                   class="w-full bg-white/90 border border-inkBlack/25 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-inkBlack">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Como deseja receber?</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" id="btn-delivery" onclick="setDeliveryType('Entrega')"
+                                        class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack bg-inkBlack text-mustard transition">
+                                    🛵 Entrega (Delivery)
+                                </button>
+                                <button type="button" id="btn-pickup" onclick="setDeliveryType('Retirada no Balcão')"
+                                        class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack/20 bg-white/70 text-inkBlack transition">
+                                    🏪 Retirar no Local
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="address-wrapper">
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Endereço Completo / Ponto de Referência *</label>
+                            <input type="text" id="customer-address" placeholder="Rua, número, bairro, ponto de referência..."
+                                   class="w-full bg-white/90 border border-inkBlack/25 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:border-inkBlack">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Forma de Pagamento</label>
+                            <select id="payment-method" onchange="toggleTrocoField()"
+                                    class="w-full bg-white/90 border border-inkBlack/25 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:outline-none focus:border-inkBlack">
+                                <option value="Pix (Chave: 89 98805-9770)">💠 Pix (Chave: 89 98805-9770)</option>
+                                <option value="Cartão (Débito/Crédito)">💳 Cartão (Débito / Crédito)</option>
+                                <option value="Dinheiro">💵 Dinheiro</option>
+                            </select>
+                        </div>
+
+                        <div id="troco-wrapper" class="hidden">
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Precisa de troco para quanto?</label>
+                            <input type="text" id="troco-value" placeholder="Ex: Troco para R$ 50,00 (ou Sem troco)"
+                                   class="w-full bg-white/90 border border-inkBlack/25 rounded-xl px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-inkBlack">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-inkBlack/80 mb-1">Observações do Pedido (Opcional)</label>
+                            <textarea id="order-notes" rows="2" placeholder="Ex: Tirar cebola do X-Salada, caprichar no molho..."
+                                      class="w-full bg-white/90 border border-inkBlack/25 rounded-xl px-3.5 py-2 text-sm font-medium focus:outline-none focus:border-inkBlack"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-stoneDark/60 px-5 py-4 border-t-2 border-inkBlack/15 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-sm uppercase text-inkBlack/80">Total dos Itens:</span>
+                        <span id="modal-cart-total" class="font-display text-2xl sm:text-3xl text-inkBlack">R$ 0,00</span>
+                    </div>
+                    <button onclick="sendOrderToWhatsApp()"
+                            class="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white font-bold py-3.5 px-5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base transition">
+                        <span>📲</span>
+                        <span>Enviar Pedido no WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MENU_DATA = {
+            tradicionais: [
+                { id: 'trad-1', name: 'X-BURGER', desc: 'Hambúrguer 56g, mussarela', price: 12.00 },
+                { id: 'trad-2', name: 'X-SALADA', desc: 'Hambúrguer 56g, mussarela, tomate, alface, cebola', price: 14.00 },
+                { id: 'trad-3', name: 'X-EGG (OVO)', desc: 'Hambúrguer 56g, mussarela, ovo', price: 14.00 },
+                { id: 'trad-4', name: 'X-CALABRESA', desc: 'Hambúrguer 56g, mussarela, calabresa', price: 14.00 },
+                { id: 'trad-5', name: 'X-FRANGO II', desc: 'Hambúrguer 56g, mussarela, frango desfiado', price: 14.00 },
+                { id: 'trad-6', name: 'X-BACON', desc: 'Hambúrguer 56g, mussarela, bacon', price: 15.00 },
+                { id: 'trad-7', name: 'X-CALABACON', desc: 'Hambúrguer 56g, mussarela, calabresa, bacon', price: 16.00 },
+                { id: 'trad-8', name: 'X-CALAFRANGO', desc: 'Hambúrguer 56g, mussarela, frango desfiado, calabresa', price: 16.00 },
+                { id: 'trad-9', name: 'X-EGGBACON', desc: 'Hambúrguer 56g, mussarela, ovo, bacon', price: 16.00 },
+                { id: 'trad-10', name: 'X-TUDO', desc: 'Hambúrguer 56g, mussarela, alface, tomate, cebola, ovo, calabresa, bacon', price: 20.00 }
+            ],
+            artesanais: [
+                { id: 'art-1', name: 'X-FRANGO I', desc: 'Frango desfiado, mussarela, maionese, ketchup e cebola frita', price: 14.00 },
+                { id: 'art-2', name: 'FRANGO MIX', desc: 'Frango desfiado, calabresa, cheddar, mussarela e milho', price: 19.00 },
+                { id: 'art-3', name: 'FILÉ MIX TOSCANA', desc: 'Linguiça toscana, mussarela, tomate e alface', price: 18.00 },
+                { id: 'art-4', name: 'FILÉ MIX FRANGO', desc: 'Filé de frango, mussarela, tomate e alface', price: 18.00 },
+                { id: 'art-5', name: 'CHEDDAR MIX BACON', desc: 'Hambúrguer artesanal, bacon, cheddar, maionese, cebola frita', price: 20.00 },
+                { id: 'art-6', name: 'DUPLO MIX', desc: '2x hambúrguer artesanal, 2x mussarela, cebola frita, bacon e molho barbecue', price: 26.00 }
+            ],
+            adicionais: [
+                { id: 'add-1', name: 'HAMBÚRGUER ARTESANAL', desc: 'Carne bovina 100g', price: 8.00 },
+                { id: 'add-2', name: 'HAMBÚRGUER 56G', desc: 'Tradicional', price: 5.00 },
+                { id: 'add-3', name: 'FRANGO DESFIADO', desc: '', price: 4.00 },
+                { id: 'add-4', name: 'CALABRESA', desc: '', price: 4.00 },
+                { id: 'add-5', name: 'MUSSARELA', desc: '', price: 4.00 },
+                { id: 'add-6', name: 'BACON', desc: '', price: 4.00 },
+                { id: 'add-7', name: 'OVO', desc: '', price: 4.00 },
+                { id: 'add-8', name: 'ALFACE', desc: '', price: 3.00 },
+                { id: 'add-9', name: 'TOMATE', desc: '', price: 3.00 },
+                { id: 'add-10', name: 'CEBOLA FRITA', desc: '', price: 3.00 },
+                { id: 'add-11', name: 'CATUPIRY', desc: '', price: 4.00 },
+                { id: 'add-12', name: 'CHEDDAR', desc: '', price: 4.00 },
+                { id: 'add-13', name: 'BATATA PALHA', desc: '', price: 4.00 },
+                { id: 'add-14', name: 'MILHO', desc: '', price: 3.00 },
+                { id: 'add-15', name: 'VINAGRETE', desc: '', price: 4.00 }
+            ],
+            pasteis: [
+                { id: 'pas-1', name: 'QUEIJO', desc: '', price: 8.00 },
+                { id: 'pas-2', name: 'CARNE', desc: '', price: 8.00 },
+                { id: 'pas-3', name: 'FRANGO', desc: '', price: 8.00 },
+                { id: 'pas-4', name: 'CALABRESA', desc: '', price: 8.00 },
+                { id: 'pas-5', name: 'PIZZA', desc: 'Mussarela, tomate e orégano', price: 8.00 },
+                { id: 'pas-6', name: 'BAURU', desc: 'Presunto, mussarela, tomate e orégano', price: 10.00 },
+                { id: 'pas-7', name: 'MISTO', desc: '', price: 10.00 },
+                { id: 'pas-8', name: 'ESPECIAL CARNE', desc: 'Carne, calabresa, mussarela, tomate e orégano', price: 12.00 },
+                { id: 'pas-9', name: 'ESPECIAL FRANGO', desc: 'Frango, calabresa, mussarela, tomate e orégano', price: 12.00 },
+                { id: 'pas-10', name: 'CAIPIRA', desc: 'Frango, bacon, mussarela e milho', price: 12.00 }
+            ],
+            crepiocas: [
+                { id: 'crep-1', name: 'CARNE', desc: 'Carne, mussarela, tomate, cebola e orégano', price: 14.00 },
+                { id: 'crep-2', name: 'FRANGO', desc: 'Frango, mussarela, tomate, cebola e orégano', price: 14.00 },
+                { id: 'crep-3', name: 'CALABRESA', desc: 'Calabresa, mussarela, tomate, cebola e orégano', price: 14.00 },
+                { id: 'crep-4', name: 'MISTA CARNE', desc: 'Carne, calabresa, mussarela, tomate, cebola e orégano', price: 16.00 },
+                { id: 'crep-5', name: 'MISTA FRANGO', desc: 'Frango, calabresa, mussarela, tomate, cebola e orégano', price: 16.00 },
+                { id: 'crep-6', name: 'CAIPIRA', desc: 'Mussarela, tomate, cebola, orégano, frango, bacon e milho', price: 16.00 }
+            ],
+            bebidas: [
+                { id: 'beb-1', name: 'SUCO S/ LEITE', desc: '', price: 8.00 },
+                { id: 'beb-2', name: 'SUCO C/ LEITE', desc: '', price: 9.00 },
+                { id: 'beb-3', name: 'REFRIGERANTE 1L', desc: '', price: 10.00 },
+                { id: 'beb-4', name: 'REFRIGERANTE 1,5L', desc: '', price: 12.00 },
+                { id: 'beb-5', name: 'REFRIGERANTE LATA', desc: '', price: 5.00 },
+                { id: 'beb-6', name: 'REFRIGERANTE 250ml', desc: '', price: 3.00 },
+                { id: 'beb-7', name: 'ÁGUA MINERAL 500ml', desc: '', price: 3.00 }
+            ]
+        };
+
+        const ALL_ITEMS = {};
+        Object.entries(MENU_DATA).forEach(([category, items]) => {
+            items.forEach(item => {
+                ALL_ITEMS[item.id] = { ...item, category };
+            });
+        });
+
+        let cart = {};
+        let deliveryType = 'Entrega';
+
+        function formatBRL(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function renderCategory(categoryKey, containerId, isMustardTheme = false) {
+            const container = document.getElementById(containerId);
+            const items = MENU_DATA[categoryKey];
+
+            container.innerHTML = items.map(item => {
+                const qty = cart[item.id] || 0;
+                const titleColor = isMustardTheme ? 'text-mustardDark' : 'text-inkBlack';
+                const dotsClass = isMustardTheme ? 'menu-dots-mustard' : 'menu-dots';
+
+                return `
+                    <div class="menu-item-card group flex items-center justify-between gap-3 py-1.5 border-b border-inkBlack/10 last:border-b-0"
+                         data-name="${item.name.toLowerCase()}"
+                         data-desc="${item.desc.toLowerCase()}">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-baseline">
+                                <span class="font-bold text-sm sm:text-base ${titleColor} tracking-tight">${item.name}</span>
+                                <span class="${dotsClass}"></span>
+                                <span class="font-extrabold text-sm sm:text-base text-inkBlack bg-stoneDark/45 px-2 py-0.5 rounded-md whitespace-nowrap">
+                                    ${formatBRL(item.price)}
+                                </span>
+                            </div>
+                            ${item.desc ? `<p class="text-xs text-inkBlack/75 mt-0.5 leading-snug">(${item.desc})</p>` : ''}
+                        </div>
+                        <div class="shrink-0">
+                            ${qty === 0 ? `
+                                <button onclick="updateCart('${item.id}', 1)"
+                                        aria-label="Adicionar ${item.name}"
+                                        class="bg-inkBlack hover:bg-mustard text-mustard hover:text-inkBlack font-bold text-xs px-3 py-2 rounded-xl transition shadow-xs active:scale-95 flex items-center gap-1">
+                                    <span>+</span>
+                                    <span class="hidden sm:inline">Pedir</span>
+                                </button>
+                            ` : `
+                                <div class="inline-flex items-center bg-inkBlack text-white rounded-xl overflow-hidden shadow-sm">
+                                    <button onclick="updateCart('${item.id}', -1)" class="px-2.5 py-1.5 hover:bg-white/15 font-bold text-mustard">−</button>
+                                    <span class="px-2 text-xs font-extrabold">${qty}</span>
+                                    <button onclick="updateCart('${item.id}', 1)" class="px-2.5 py-1.5 hover:bg-white/15 font-bold text-mustard">+</button>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAllMenus() {
+            renderCategory('tradicionais', 'list-tradicionais', false);
+            renderCategory('artesanais', 'list-artesanais', false);
+            renderCategory('adicionais', 'list-adicionais', true);
+            renderCategory('pasteis', 'list-pasteis', false);
+            renderCategory('crepiocas', 'list-crepiocas', false);
+            renderCategory('bebidas', 'list-bebidas', false);
+            filterMenu();
+        }
+
+        function updateCart(itemId, delta) {
+            const current = cart[itemId] || 0;
+            const next = current + delta;
+            if (next <= 0) {
+                delete cart[itemId];
+            } else {
+                cart[itemId] = next;
+                if (current === 0) showToast(`✅ ${ALL_ITEMS[itemId].name} adicionado!`);
+            }
+            renderAllMenus();
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = {};
+            renderAllMenus();
+            updateCartUI();
+            closeCartModal();
+            showToast('Carrinho esvaziado.');
+        }
+
+        function updateCartUI() {
+            const entries = Object.entries(cart);
+            const totalItems = entries.reduce((sum, [, qty]) => sum + qty, 0);
+            const totalPrice = entries.reduce((sum, [id, qty]) => sum + (ALL_ITEMS[id].price * qty), 0);
+
+            const floatingBar = document.getElementById('floating-cart-bar');
+            document.getElementById('floating-cart-count').textContent = totalItems;
+            document.getElementById('floating-cart-total').textContent = formatBRL(totalPrice);
+            document.getElementById('modal-cart-total').textContent = formatBRL(totalPrice);
+
+            if (totalItems > 0) {
+                floatingBar.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+            } else {
+                floatingBar.classList.add('translate-y-28', 'opacity-0', 'pointer-events-none');
+            }
+
+            const modalList = document.getElementById('cart-items-list');
+            if (entries.length === 0) {
+                modalList.innerHTML = `<p class="text-sm text-inkBlack/60 text-center py-4">Seu carrinho está vazio.</p>`;
+            } else {
+                modalList.innerHTML = entries.map(([id, qty]) => {
+                    const item = ALL_ITEMS[id];
+                    const subtotal = item.price * qty;
+                    return `
+                        <div class="flex items-center justify-between bg-white/80 p-3 rounded-xl border border-inkBlack/15">
+                            <div class="pr-2">
+                                <p class="font-bold text-sm text-inkBlack">${item.name}</p>
+                                <p class="text-xs text-inkBlack/70">${formatBRL(item.price)} cada • <strong class="text-inkBlack">${formatBRL(subtotal)}</strong></p>
+                            </div>
+                            <div class="inline-flex items-center bg-inkBlack text-white rounded-lg overflow-hidden shrink-0">
+                                <button onclick="updateCart('${id}', -1)" class="px-2.5 py-1 hover:bg-white/15 font-bold text-mustard">−</button>
+                                <span class="px-2 text-xs font-bold">${qty}</span>
+                                <button onclick="updateCart('${id}', 1)" class="px-2.5 py-1 hover:bg-white/15 font-bold text-mustard">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function openCartModal() {
+            updateCartUI();
+            document.getElementById('cart-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function setDeliveryType(type) {
+            deliveryType = type;
+            const btnDelivery = document.getElementById('btn-delivery');
+            const btnPickup = document.getElementById('btn-pickup');
+            const addressWrapper = document.getElementById('address-wrapper');
+
+            if (type === 'Entrega') {
+                btnDelivery.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack bg-inkBlack text-mustard transition';
+                btnPickup.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack/20 bg-white/70 text-inkBlack transition';
+                addressWrapper.classList.remove('hidden');
+            } else {
+                btnPickup.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack bg-inkBlack text-mustard transition';
+                btnDelivery.className = 'py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold border-2 border-inkBlack/20 bg-white/70 text-inkBlack transition';
+                addressWrapper.classList.add('hidden');
+            }
+        }
+
+        function toggleTrocoField() {
+            const method = document.getElementById('payment-method').value;
+            const trocoWrapper = document.getElementById('troco-wrapper');
+            trocoWrapper.classList.toggle('hidden', method !== 'Dinheiro');
+        }
+
+        function sendOrderToWhatsApp() {
+            const entries = Object.entries(cart);
+            if (entries.length === 0) {
+                showToast('⚠️ Adicione pelo menos 1 item antes de enviar.', true);
+                return;
+            }
+            const name = document.getElementById('customer-name').value.trim();
+            const address = document.getElementById('customer-address').value.trim();
+            const payment = document.getElementById('payment-method').value;
+            const troco = document.getElementById('troco-value').value.trim();
+            const notes = document.getElementById('order-notes').value.trim();
+
+            if (!name) {
+                showToast('⚠️ Por favor, informe seu nome.', true);
+                document.getElementById('customer-name').focus();
+                return;
+            }
+            if (deliveryType === 'Entrega' && !address) {
+                showToast('⚠️ Informe o endereço para entrega.', true);
+                document.getElementById('customer-address').focus();
+                return;
+            }
+
+            let total = 0;
+            const itemsLines = entries.map(([id, qty]) => {
+                const item = ALL_ITEMS[id];
+                const sub = item.price * qty;
+                total += sub;
+                return `• ${qty}x *${item.name}* — ${formatBRL(sub)}`;
+            }).join('\n');
+
+            let message = `🍔 *NOVO PEDIDO — D'MIX BURGUER*\n────────────────────\n👤 *Cliente:* ${name}\n🛵 *Tipo:* ${deliveryType}\n`;
+            if (deliveryType === 'Entrega') message += `📍 *Endereço:* ${address}\n`;
+            message += `────────────────────\n*ITENS DO PEDIDO:*\n${itemsLines}\n────────────────────\n💰 *TOTAL:* *${formatBRL(total)}*\n💳 *Pagamento:* ${payment}\n`;
+            if (payment === 'Dinheiro' && troco) message += `💵 *Troco:* ${troco}\n`;
+            if (notes) message += `📝 *Observações:* ${notes}\n`;
+
+            window.open(`https://wa.me/5589988099053?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        const searchInput = document.getElementById('search-input');
+        const clearSearchBtn = document.getElementById('clear-search');
+        searchInput.addEventListener('input', () => {
+            clearSearchBtn.classList.toggle('hidden', searchInput.value.length === 0);
+            filterMenu();
+        });
+
+        function clearSearch() {
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            filterMenu();
+        }
+
+        function filterMenu() {
+            const term = searchInput.value.toLowerCase().trim();
+            const sections = document.querySelectorAll('.menu-section');
+            let totalVisibleItems = 0;
+
+            sections.forEach(section => {
+                const cards = section.querySelectorAll('.menu-item-card');
+                let visibleInSection = 0;
+                cards.forEach(card => {
+                    const matches = !term || card.dataset.name.includes(term) || card.dataset.desc.includes(term);
+                    card.classList.toggle('hidden', !matches);
+                    if (matches) { visibleInSection++; totalVisibleItems++; }
+                });
+                section.classList.toggle('hidden', visibleInSection === 0);
+            });
+            document.getElementById('empty-search-state').classList.toggle('hidden', totalVisibleItems > 0);
+        }
+
+        function copyText(text, successMsg) {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                showToast(`📋 ${successMsg}`);
+            } catch (err) {
+                showToast('Não foi possível copiar automaticamente.', true);
+            }
+            document.body.removeChild(tempInput);
+        }
+
+        function showToast(message, isWarning = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `${isWarning ? 'bg-amber-800 border-amber-400' : 'bg-inkBlack border-mustard'} text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-xl border-2 shadow-xl animate-slide-up`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 2600);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAllMenus();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html></template>
+
+    <template id="site-chuteiras"><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuteiras Pro | Painel Administrativo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --accent: #ff0055;
+            --bg-dark: #0f0f12;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.1);
+            --text: #f4f4f4;
+            --whatsapp: #25D366;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-dark); color: var(--text); overflow-x: hidden; }
+        header { 
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--glass);
+            background: rgba(15, 15, 18, 0.9); flex-wrap: wrap; gap: 15px;
+        }
+        header h1 { font-size: 1.5rem; font-weight: 800; background: linear-gradient(to right, var(--primary), #9d00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-container { flex-grow: 1; max-width: 400px; min-width: 200px; }
+        .search-container input { margin: 0; border-radius: 25px; padding: 10px 20px; background: rgba(255,255,255,0.08); }
+        nav a { margin-left: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; text-decoration: none; color: inherit; }
+        .produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; padding: 40px 5%; }
+        .produto { 
+            background: var(--card-bg); border: 1px solid var(--glass); padding: 20px; border-radius: 24px; 
+            text-align: center; transition: 0.4s; backdrop-filter: blur(10px);
+        }
+        .produto:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .produto img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px; }
+        .preco { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
+        .btn-add { 
+            width: 100%; padding: 12px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer;
+            background: linear-gradient(45deg, var(--primary), #004eff); color: white; transition: 0.3s;
+        }
+        .btn-add:hover { transform: scale(1.02); filter: brightness(1.2); }
+        .btn-limpar { background: none; border: 1px solid #555; color: #888; margin-top: 10px; width: 100%; padding: 8px; border-radius: 10px; cursor: pointer;}
+        input { 
+            width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid var(--glass); 
+            background: rgba(255,255,255,0.05); color: white; font-family: inherit; outline: none;
+        }
+        input:focus { border-color: var(--primary); }
+        .painel {
+            position: fixed; top: 0; right: -450px; width: 400px; height: 100%;
+            background: rgba(15, 15, 20, 0.98); backdrop-filter: blur(25px);
+            z-index: 2000; padding: 30px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;
+        }
+        .painel.ativo { right: 0; }
+        #admin { right: auto; left: -450px; }
+        #admin.ativo { left: 0; }
+        .btn-fechar { background: none; border: 1px solid var(--accent); color: var(--accent); padding: 5px 15px; border-radius: 20px; cursor: pointer; float: right; }
+        .admin-card { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--primary); }
+        .btn-delete { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
+        .num-label { display: inline-block; padding: 5px 10px; border-radius: 8px; margin: 2px; border: 1px solid var(--glass); cursor: pointer; font-size: 0.8rem; }
+        .num-label.selecionado { background: var(--primary); color: #000; border-color: var(--primary); font-weight: bold; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 10px; }
+        @media (max-width: 600px) { 
+            header { justify-content: center; text-align: center; }
+            .search-container { order: 3; max-width: 100%; }
+            .painel { width: 100%; } 
+            #admin.ativo { left: 0; } 
+            #carrinho.ativo { right: 0; } 
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>CHUTEIRAS.<span>PRO</span></h1>
+    <div class="search-container">
+        <input type="text" id="input-busca" placeholder="O que você está procurando?" oninput="filtrarProdutos()">
+    </div>
+    <nav>
+        <a onclick="togglePainel('carrinho')">🛒 <span id="cart-count">0</span></a>
+        <a onclick="abrirLoginADM()" style="color: var(--primary)">⚙️ GERENCIAR</a>
+    </nav>
+</header>
+
+<section class="produtos" id="produtos-grid"></section>
+
+<div class="painel" id="carrinho">
+    <button class="btn-fechar" onclick="togglePainel('carrinho')">FECHAR</button>
+    <h2 style="margin-bottom:20px">Seu Carrinho</h2>
+    <div id="itens-carrinho"></div>
+    <div style="margin-top:20px; border-top:1px solid var(--glass); padding-top:20px">
+        <h3>Total: <span id="total-carrinho" style="color:var(--primary)">R$ 0,00</span></h3>
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 5px;">
+            <label style="font-size: 0.8rem; opacity: 0.7;">Dados para entrega:</label>
+            <input id="cliente-nome" placeholder="Nome Completo">
+            <input id="cliente-tel" type="tel" placeholder="WhatsApp (DDD + Número)">
+            <input id="cliente-cpf" placeholder="CPF">
+            <input id="cliente-cep" placeholder="CEP para Entrega">
+        </div>
+        <button class="btn-add" onclick="finalizarWhatsApp()" style="background: var(--whatsapp); margin-top:15px">Pedir via WhatsApp</button>
+        <button class="btn-limpar" onclick="limparCarrinho()">Esvaziar Carrinho</button>
+    </div>
+</div>
+
+<div class="painel" id="admin">
+    <button class="btn-fechar" onclick="togglePainel('admin')">SAIR ADM</button>
+    <h2 style="margin-bottom:20px; color:var(--primary)">Painel de Controle</h2>
+    <div id="lista-editavel" style="margin-bottom:30px"></div>
+    <div style="background: rgba(0,210,255,0.1); padding: 20px; border-radius: 20px;">
+        <h3>+ Novo Produto</h3>
+        <input id="add-nome" placeholder="Nome da Chuteira">
+        <input id="add-preco" type="number" placeholder="Preço">
+        <input id="add-estoque" type="number" placeholder="Qtd em Estoque">
+        <input id="add-img" placeholder="URL da Imagem">
+        <button class="btn-add" onclick="novoProduto()">Cadastrar no Site</button>
+    </div>
+</div>
+
+<script>
+    const SENHA_ADM = "laecyo29";
+    const WHATSAPP_CONTATO = "5511999999999";
+    const dadosPadrao = [
+        {id: 1, nome:"Nike Mercurial", preco:265.99, estoque:5, img:"https://imgcentauro-a.akamaihd.net/1200x1200/98995429A2.jpg", tamanhos:[37,38,39,40,41,42]},
+        {id: 2, nome:"Adidas X CrazyFast", preco:279.99, estoque:5, img:"https://trilhaesportes.fbitsstatic.net/img/p/chuteira-adidas-x-crazyfast-3-campo-azul-branco-72759/281624-2.jpg", tamanhos:[36,37,38,39,40,41]},
+        {id: 3, nome:"Puma Future Neymar", preco:659.90, estoque:5, img:"https://images.tcdn.com.br/img/img_prod/311840/chuteira_puma_future_ultimate_neymar_njr_fg_ag_campo_branca_118661_1_174b9a89026bd150108462d4d3b1d477.jpg", tamanhos:[38,39,40,41,42,43]},
+        {id: 4, nome:"Puma Future Match BDP", preco:659.90, estoque:5, img:"https://imgcentauro-a.akamaihd.net/1200x1200/M14WFE05A8.jpg", tamanhos:[37,38,39,40,41,42]},
+        {id: 5, nome:"Umbro Futsal", preco:270.63, estoque:5, img:"https://grupooscar.vteximg.com.br/arquivos/ids/1937907/Umbro-Chuteira-PRO-5-BUMP-CLUB-U01FB042-203-BrancoElectric-PurpleAzul-Sint--7-.webp", tamanhos:[36,37,38,39,40]},
+        {id: 6, nome:"Umbro Kintsugi", preco:749.99, estoque:5, img:"https://static.hupishop.com.br/public/hupibikes/imagens/produtos/chuteira-futsal-umbro-pro-5-bump-kintsugi-bco-azc-69c3dbcfc4b27.jpg", tamanhos:[38,39,40,41,42]}
+    ];
+
+    let produtos = JSON.parse(localStorage.getItem('estoque_chuteiras')) || dadosPadrao;
+    let carrinho = JSON.parse(localStorage.getItem('carrinho_chuteiras')) || [];
+    let selecionados = {}; 
+
+    function salvarDados() {
+        localStorage.setItem('estoque_chuteiras', JSON.stringify(produtos));
+        localStorage.setItem('carrinho_chuteiras', JSON.stringify(carrinho));
+    }
+
+    function renderLoja(listaParaExibir = produtos) {
+        const grid = document.getElementById("produtos-grid");
+        if(listaParaExibir.length === 0) {
+            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; opacity: 0.5; padding: 50px;">Nenhuma chuteira encontrada.</p>`;
+            return;
+        }
+        grid.innerHTML = listaParaExibir.map((p) => {
+            const indexReal = produtos.findIndex(item => item.id === p.id);
+            return `
+                <div class="produto">
+                    <img src="${p.img}">
+                    <h3>${p.nome}</h3>
+                    <div class="preco">R$ ${p.preco.toFixed(2)}</div>
+                    <div style="margin-bottom:15px">
+                        ${p.tamanhos.map(t => `
+                            <span class="num-label ${selecionados[indexReal] === t ? 'selecionado' : ''}" 
+                                  onclick="setTamanho(${indexReal}, ${t})">${t}</span>
+                        `).join('')}
+                    </div>
+                    <button class="btn-add" onclick="addCarrinho(${indexReal})">${p.estoque > 0 ? 'Comprar' : 'Esgotado'}</button>
+                    <p style="margin-top:10px; font-size:0.7rem; opacity:0.5">Estoque: ${p.estoque}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function filtrarProdutos() {
+        const termo = document.getElementById("input-busca").value.toLowerCase();
+        const filtrados = produtos.filter(p => p.nome.toLowerCase().includes(termo));
+        renderLoja(filtrados);
+    }
+
+    function setTamanho(idx, tam) {
+        selecionados[idx] = tam;
+        filtrarProdutos(); 
+    }
+
+    function addCarrinho(i) {
+        if(!selecionados[i]) return alert("Escolha um tamanho primeiro!");
+        const p = produtos[i];
+        if(p.estoque <= 0) return alert("Produto esgotado!");
+        carrinho.push({ idUnico: Date.now(), idProd: p.id, nome: p.nome, preco: p.preco, tam: selecionados[i] });
+        p.estoque--;
+        salvarDados();
+        atualizarInterface();
+    }
+
+    function removerDoCarrinho(indexNoCarrinho) {
+        const item = carrinho[indexNoCarrinho];
+        const p = produtos.find(prod => prod.id === item.idProd);
+        if(p) p.estoque++;
+        carrinho.splice(indexNoCarrinho, 1);
+        salvarDados();
+        atualizarInterface();
+    }
+
+    function limparCarrinho() {
+        if(confirm("Deseja esvaziar o carrinho?")){
+            carrinho.forEach(item => {
+                const p = produtos.find(prod => prod.id === item.idProd);
+                if(p) p.estoque++;
+            });
+            carrinho = [];
+            salvarDados();
+            atualizarInterface();
+        }
+    }
+
+    function atualizarInterface() {
+        filtrarProdutos();
+        document.getElementById("cart-count").innerText = carrinho.length;
+        const lista = document.getElementById("itens-carrinho");
+        let total = 0;
+        lista.innerHTML = carrinho.map((item, idx) => {
+            total += item.preco;
+            return `
+                <div class="cart-item">
+                    <div style="font-size:0.8rem">
+                        <b>${item.nome}</b><br>Tam: ${item.tam} - R$ ${item.preco.toFixed(2)}
+                    </div>
+                    <button onclick="removerDoCarrinho(${idx})" style="background:none; border:none; color:red; cursor:pointer">✖</button>
+                </div>`;
+        }).join('');
+        document.getElementById("total-carrinho").innerText = `R$ ${total.toFixed(2)}`;
+    }
+
+    function finalizarWhatsApp() {
+        const nome = document.getElementById("cliente-nome").value;
+        const tel = document.getElementById("cliente-tel").value;
+        const cpf = document.getElementById("cliente-cpf").value;
+        const cep = document.getElementById("cliente-cep").value;
+        if(!nome || !tel || !cpf || !cep || carrinho.length === 0) return alert("Preencha todos os campos e adicione itens ao carrinho!");
+        let msg = `*⚽ NOVO PEDIDO - CHUTEIRAS PRO*\n\n👤 *Cliente:* ${nome}\n📞 *WhatsApp:* ${tel}\n📄 *CPF:* ${cpf}\n📍 *CEP:* ${cep}\n\n*--- PRODUTOS ---*\n`;
+        carrinho.forEach(item => { msg += `• ${item.nome} (Tam: ${item.tam}) - R$ ${item.preco.toFixed(2)}\n`; });
+        msg += `\n💰 *Total: ${document.getElementById("total-carrinho").innerText}*`;
+        window.open(`https://wa.me/${WHATSAPP_CONTATO}?text=${encodeURIComponent(msg)}`);
+    }
+
+    function togglePainel(id) { document.getElementById(id).classList.toggle("ativo"); }
+
+    function abrirLoginADM() {
+        const pass = prompt("Senha ADM:");
+        if(pass === SENHA_ADM) { renderAdmin(); togglePainel('admin'); } else alert("Senha incorreta!");
+    }
+
+    function renderAdmin() {
+        const lista = document.getElementById("lista-editavel");
+        lista.innerHTML = produtos.map((p, i) => `
+            <div class="admin-card">
+                <h4>${p.nome}</h4>
+                <div style="display:flex; gap:5px">
+                    <input type="number" value="${p.preco}" onchange="editarProduto(${i}, 'preco', this.value)" style="padding:5px">
+                    <input type="number" value="${p.estoque}" onchange="editarProduto(${i}, 'estoque', this.value)" style="padding:5px">
+                </div>
+                <button class="btn-delete" onclick="removerProduto(${i})">Excluir</button>
+            </div>
+        `).join('');
+    }
+
+    function editarProduto(i, campo, valor) { produtos[i][campo] = parseFloat(valor); salvarDados(); filtrarProdutos(); }
+
+    function removerProduto(i) {
+        if(confirm("Excluir produto?")) {
+            produtos.splice(i, 1); salvarDados(); filtrarProdutos(); renderAdmin();
+        }
+    }
+
+    function novoProduto() {
+        const nome = document.getElementById("add-nome").value;
+        const preco = parseFloat(document.getElementById("add-preco").value);
+        const estoque = parseInt(document.getElementById("add-estoque").value);
+        const img = document.getElementById("add-img").value;
+        if(!nome || !preco || !img) return alert("Preencha todos os campos!");
+        produtos.push({ id: Date.now(), nome, preco, estoque: estoque || 0, img, tamanhos: [37,38,39,40,41,42] });
+        salvarDados(); filtrarProdutos(); renderAdmin(); alert("Produto cadastrado!");
+    }
+
+    atualizarInterface();
+</script>
+</body>
+</html></template>
+
+    <script>
+        /* ==========================
+           1. ABRIR E FECHAR PROJETOS
+        ========================== */
+        function abrirSite(projeto) {
+            const viewer = document.getElementById('project-viewer');
+            const frame = document.getElementById('project-frame');
+            const title = document.getElementById('viewer-title');
+
+            if (projeto === 'dmix') {
+                title.textContent = "D'MIX BURGUER — Cardápio Digital";
+                frame.srcdoc = document.getElementById('site-dmix').innerHTML;
+            } else if (projeto === 'chuteiras') {
+                title.textContent = "CHUTEIRAS.PRO — Loja Virtual";
+                frame.srcdoc = document.getElementById('site-chuteiras').innerHTML;
+            }
+
+            viewer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function fecharSite() {
+            const viewer = document.getElementById('project-viewer');
+            const frame = document.getElementById('project-frame');
+            viewer.style.display = 'none';
+            frame.srcdoc = '';
+            document.body.style.overflow = '';
+        }
+
+        /* ==========================
+           2. EFEITO DIGITAÇÃO NO TOPO
+        ========================== */
+        const palavras = ["programação.", "sites incríveis.", "lojas virtuais.", "cardápios digitais.", "sistemas web."];
+        let pIdx = 0;
+        let charIdx = 0;
+        let apagando = false;
+        const typingEl = document.getElementById('typing-text');
+
+        function animarDigitacao() {
+            const palavraAtual = palavras[pIdx];
+            if (!apagando) {
+                typingEl.textContent = palavraAtual.substring(0, charIdx + 1);
+                charIdx++;
+                if (charIdx === palavraAtual.length) {
+                    apagando = true;
+                    setTimeout(animarDigitacao, 1600);
+                    return;
+                }
+            } else {
+                typingEl.textContent = palavraAtual.substring(0, charIdx - 1);
+                charIdx--;
+                if (charIdx === 0) {
+                    apagando = false;
+                    pIdx = (pIdx + 1) % palavras.length;
+                }
+            }
+            setTimeout(animarDigitacao, apagando ? 55 : 95);
+        }
+        animarDigitacao();
+
+        /* ==========================
+           3. BARRA DE PROGRESSO SCROLL
+        ========================== */
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('scroll-progress').style.width = progress + '%';
+        });
+
+        /* ==========================
+           4. SCROLL REVEAL (ENTRADA)
+        ========================== */
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 90);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        /* ==========================
+           5. EFEITO 3D NOS CARDS
+        ========================== */
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateX = (((y - rect.height / 2) / (rect.height / 2)) * -3.5).toFixed(2);
+                const rotateY = (((x - rect.width / 2) / (rect.width / 2)) * 3.5).toFixed(2);
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+            });
+        });
+
+        /* ==========================
+           6. ONDA DE CLIQUE (RIPPLE)
+        ========================== */
+        document.querySelectorAll('.ripple-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(this.clientWidth, this.clientHeight);
+                const rect = this.getBoundingClientRect();
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - rect.left - diameter / 2}px`;
+                circle.style.top = `${e.clientY - rect.top - diameter / 2}px`;
+                circle.classList.add('ripple');
+                this.appendChild(circle);
+                setTimeout(() => circle.remove(), 600);
+            });
+        });
+
+        /* ==========================
+           7. PARTÍCULAS INTERATIVAS
+        ========================== */
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1.5;
+                this.vx = (Math.random() - 0.5) * 0.9;
+                this.vy = (Math.random() - 0.5) * 0.9;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 119, 255, 0.35)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) particles.push(new Particle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                // Conectar partículas próximas entre si e ao mouse
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 120) {
+                        ctx.strokeStyle = `rgba(0, 119, 255, ${0.15 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+
+                if (mouse.x !== null) {
+                    const dxm = particles[i].x - mouse.x;
+                    const dym = particles[i].y - mouse.y;
+                    const distM = Math.hypot(dxm, dym);
+                    if (distM < 150) {
+                        ctx.strokeStyle = `rgba(0, 119, 255, ${0.35 * (1 - distM / 150)})`;
+                        ctx.lineWidth = 1.2;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+
+</body>
+</html>
